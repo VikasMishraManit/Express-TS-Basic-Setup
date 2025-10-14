@@ -21,11 +21,6 @@
 
 ---
 
-## 🏁 Getting Started
-
-Clone this repository and run it locally:
-
-
 # Clone this repo
 git clone https://github.com/VikasMishraManit/Express-TS-Basic-Setup.git
 
@@ -37,21 +32,25 @@ npm install
 
 # Start in development mode (with live reload)
 npm run dev
+🌐 Run the Server
 Your server should be running on 👉 http://localhost:3000
 
 Test it using:
 
+bash
+Copy code
 curl http://localhost:3000/ping
 # → pong
-
 🏗️ Build for Production
+bash
+Copy code
 npm run build
 npm start
-
-
 This will compile TypeScript into JavaScript inside the dist/ folder and run the built server.
 
 📂 Project Structure
+pgsql
+Copy code
 Express-TS-Basic-Setup/
 ├── src/
 │   └── server.ts        # 🚀 Main entry file
@@ -60,22 +59,21 @@ Express-TS-Basic-Setup/
 ├── tsconfig.json
 ├── .gitignore
 └── README.md
-
 🔧 Scripts
 Command	Description
 npm run dev	Start development server with auto reload
 npm run build	Compile TypeScript to JavaScript (into /dist)
 npm start	Run the production build
+
 💡 Example API Route
+ts
+Copy code
 app.get('/ping', (req, res) => {
   res.send('pong');
 });
-
-
 Output → pong ✅
 
 🤝 Contributing
-
 Contributions are always welcome!
 If you’d like to improve or extend this starter, follow these steps:
 
@@ -83,25 +81,23 @@ Fork the repo 🍴
 
 Create your feature branch
 
+bash
+Copy code
 git checkout -b feature/your-feature
-
-
 Commit your changes
 
+bash
+Copy code
 git commit -m "Add awesome feature"
-
-
 Push your branch
 
+bash
+Copy code
 git push origin feature/your-feature
-
-
 Open a Pull Request 🚀
 
 ⚖️ License
-
-This project is licensed under the MIT License — see the LICENSE
- file for details.
+This project is licensed under the MIT License — see the LICENSE file for details.
 
 🌟 Clone, code, and deploy faster — start your next Express app in seconds!
 Made with ❤️ by Vikas Mishra
