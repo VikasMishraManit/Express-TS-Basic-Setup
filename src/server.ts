@@ -1,12 +1,18 @@
 import express from 'express';
+import {serverConfig} from './config/index';
+import pingRouter from './routers/ping.router';
+
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-app.get('/ping', (req, res) => {
-  res.send('pong');
-});
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.use(pingRouter);
+
+console.log('env variables are loaded');
+
+
+app.listen(serverConfig.PORT, () => {
+  console.log(`Server is running on http://localhost:${serverConfig.PORT}`);
+  console.log('Press Ctrl+C to stop the server');
+  
 });
