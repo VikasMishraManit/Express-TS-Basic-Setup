@@ -56,7 +56,7 @@ to do so we will make a tsconfig.json file
     this will directly execute the file ( server will start running)
 
     2) npx tsc
-    this will create a dist foler , inside that folder we will be having 
+    this will create a dist folder , inside that folder we will be having 
     all the ts->js compiled files
     ex: server.js file will be there (with type checking)
     node dist/server.js ( now we can run this file)
@@ -152,3 +152,7 @@ Instead create a routerobject and then define the routes on that object (say pin
 // to the  app server object
 app.use(pingRouter);
 // we can add more routers
+
+<!-- ====================== Section Separator ====================== -->
+
+Middleware : are functions having access to req , res and next middleware function
