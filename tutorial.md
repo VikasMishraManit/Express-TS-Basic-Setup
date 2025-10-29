@@ -156,3 +156,8 @@ app.use(pingRouter);
 <!-- ====================== Section Separator ====================== -->
 
 Middleware : are functions having access to req , res and next middleware function
+
+pingRouter.get('/ping' ,middleware1,middleware2, pingHandler)
+
+
+Here pingHandler is the terminaing middleware
