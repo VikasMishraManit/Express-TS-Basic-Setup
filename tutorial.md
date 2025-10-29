@@ -153,6 +153,8 @@ Instead create a routerobject and then define the routes on that object (say pin
 app.use(pingRouter);
 // we can add more routers
 
+Note : app.use(middlewarename) registers this middleware to all the requests
+
 <!-- ====================== Section Separator ====================== -->
 
 Middleware : are functions having access to req , res and next middleware function
@@ -161,3 +163,33 @@ pingRouter.get('/ping' ,middleware1,middleware2, pingHandler)
 
 
 Here pingHandler is the terminaing middleware
+
+<!-- ====================== Section Separator ====================== -->
+
+We can segregate parts of a url and assign a one router 
+
+Instead of this in server.ts (app.use(pingRouter))
+
+do this 
+app.use('/ping' , pingRouter) -> request starts with ping then assign pingRouter object
+
+Now in pinRouter.ts
+
+pingRouter.get('/' , pingHandler) -> If that is a get request and end there only
+it is being handled by the pingHandler router
+
+If url after ping is health then do this
+pingRouter.get('/health' , (req,res) =>{
+  res.status(200).send('OK');
+});
+
+Now , because of this we will be able to implement a very interesting feature called as
+api versioning
+
+<!-- ====================== Section Separator ====================== -->
+
+API Versioning : We want to handle 1 set of api through 1 router. Keeping that api
+we can add more api's that can be handled by different routers 
+
+app.use('/api/v1' , v1)
+app.use('/api/v2' ,v2)
