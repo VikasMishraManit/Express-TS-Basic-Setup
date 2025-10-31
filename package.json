@@ -4,10 +4,8 @@
   "description": "A minimal Express + TypeScript starter setup",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "nodemon --watch src --exec ts-node src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js",
-    "test": "echo \"No test specified\" && exit 1"
+    "start": "ts-node src/server.ts",
+    "dev" : "nodemon src/server.ts"
   },
   "keywords": [
     "express",

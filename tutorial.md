@@ -1,4 +1,4 @@
-1) To run typescipt 
+1) To run typescript 
 -> use ts-node
 -> or convert ts into js
 
@@ -9,7 +9,7 @@ Basic Setup
 2) npm install express
 
 Now , add more dependencies to help us in the project
-Install these as dev dependenices
+Install these as dev dependencies
 
 3) npm install -D ts-node
 
@@ -193,3 +193,23 @@ we can add more api's that can be handled by different routers
 
 app.use('/api/v1' , v1)
 app.use('/api/v2' ,v2)
+
+
+<!-- ====================== Section Separator ====================== -->
+
+Restarting Server : We donot want to restart the server again and again . So we will create a script for that
+
+Whenever code changes , nodemon automatically restarts the server
+cmd is : npx nodemon src/server.ts
+
+However in package.json we can add script for that
+ "scripts": {
+    "start": "ts-node src/server.ts",
+    "dev" : "nodemon src/server.ts"
+  }
+
+  Now , we can simply run 
+  npm start 
+  npm run dev (apart from start and test put run before the command )
+
+
