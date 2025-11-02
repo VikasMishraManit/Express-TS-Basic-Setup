@@ -5,6 +5,8 @@ import v1Router from './routers/v1/index.router';
 
 const app = express();
 
+// for serializing and de-serializing
+app.use(express.json()); // to parse json body
 
 app.use('/api/v1',v1Router);
 

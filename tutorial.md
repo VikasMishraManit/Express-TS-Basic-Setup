@@ -212,4 +212,43 @@ However in package.json we can add script for that
   npm start 
   npm run dev (apart from start and test put run before the command )
 
+<!-- ====================== Section Separator ====================== -->
+Sending data through Postman and receiving it on the express
+
+console.log("req body is " , req.body); -> req body is undefined
+console.log("req query is " , req.query); -> but we can see request params
+
+Output:
+'req body is  undefined
+req query is  [Object: null prototype] { age: '23', gender: 'male' }
+'
+Reason : both query params and url params are string . so express knows it already
+and hence it has logic written for it to be parsed(this thing is called as serialization and deserialization)
+
+However , request body can be text/xml/json etc. Express can still do the 
+serialization and de-serilization for us , but first we have to tell it about
+the type 
+
+<!-- ====================== Section Separator ====================== -->
+
+Serialization and De-Serialization of the body : It is done by using the 
+middleware
+
+app.use(express.json()) or app.use(express.text())
+
+Output : 
+req body is  { name: 'vikas', company: 'Sigmoid' }
+req query is  [Object: null prototype] { age: '23', gender: 'male' }
+
+<!-- ====================== Section Separator ====================== -->
+Url encoding 
+
+The url cannot have anything inside it (like comma). But using allowed characters
+we can use this (	its url encoding is this : %2C)
+
+We can also send this type of url encoded data in the express .
+
+<!-- ====================== Section Separator ====================== -->
+
+
 
