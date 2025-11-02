@@ -249,6 +249,12 @@ we can use this (	its url encoding is this : %2C)
 We can also send this type of url encoded data in the express .
 
 <!-- ====================== Section Separator ====================== -->
+Reading URL Params
 
+When you want to send the data in the url params , you have to tell the express js
+that this part of the url is varaible
+
+pingRouter.get('/:id/comments' , pingHandler)(where final request have been mentioned)
+That colon part is the varaible part
 
 

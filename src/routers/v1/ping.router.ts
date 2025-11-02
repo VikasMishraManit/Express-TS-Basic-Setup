@@ -7,7 +7,7 @@ const pingRouter = express.Router();
 
 
 // now define the route on this object
-pingRouter.get('/' , pingHandler)
+pingRouter.get('/:id/comments' , pingHandler)
 
 pingRouter.get('/health' , (req,res) =>{
   res.status(200).send('OK');
