@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "start": "ts-node src/server.ts",
-    "dev" : "nodemon src/server.ts"
+    "dev": "nodemon src/server.ts"
   },
   "keywords": [
     "express",
@@ -17,7 +17,8 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^17.2.3",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

@@ -258,3 +258,67 @@ pingRouter.get('/:id/comments' , pingHandler)(where final request have been ment
 That colon part is the varaible part
 
 
+<!-- ====================== Section Separator ====================== -->
+ZOD 
+
+-> Install zod : npm i zod
+-> Define the schema of the object/value that you want to test
+->ZOD will test it through the parse function
+
+ // let us make a object
+  const obj = {
+    name: 'Test Object',
+    age : 23
+  }
+
+  // now let us define a zod schema for this object
+  const objSchema = z.object({
+    name: z.string(),
+    age: z.number().int().positive()
+  });
+
+  console.log(objSchema.parse(obj));
+
+<!-- ====================== Section Separator ====================== -->
+Using ZOD in the validation layer to validate the request body
+
+-> For every request body we are going to maintain a schema . For example : 
+schema for req body createUser 
+schema for req body createPost req
+
+Whenever that req comes to us , we will parse that req body in the parse function of 
+that schema . In this way we are going to validate it .
+
+Also to make the code non-blocking , we are having async function for the parsing
+
+<!-- ====================== Section Separator ====================== -->
+
+Src->validators->index.ts
+
+-> create a function to validate the req body 
+-> its argument will be the zod schema
+-> and the type of that zod schema is going to be any zod object
+-> it returns a middleware function to return the validate the request body for us
+
+-> This function will create a middleware on the go 
+-> make sure this is async 
+
+import { NextFunction, Request, Response } from "express";
+import { ZodObject, ZodRawShape } from "zod";
+
+const validateRequestBody = (schema: ZodObject<ZodRawShape>) => {
+   return  async (req: Request , res : Response , next : NextFunction)=>{
+    try{
+      await schema.parseAsync(req.body);
+      console.log("request  body is valid");
+      next();
+      
+    }
+    catch(err){
+      // if the validation fails
+      return ; 
+    }
+   }
+};
+
+export default validateRequestBody;
