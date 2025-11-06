@@ -1,9 +1,13 @@
-import { Request, Response } from  "express";
+import { NextFunction, Request, Response } from "express";
+import fs from "fs/promises";
 
-export const pingHandler = (req : Request , res: Response) =>{
-  console.log("req body is " , req.body);
-  console.log("req query is " , req.query);
-  console.log("req query is " , req.params);
+export const pingHandler = async (req: Request, res: Response, next: NextFunction) => {
   
-  res.send('Pong');
-}
+  try{
+ await fs.readFile("sample")
+ res.status(200).json({message : "pong"});
+  } catch(error){
+    // since express already calls the next function
+    next(error)
+  }
+};

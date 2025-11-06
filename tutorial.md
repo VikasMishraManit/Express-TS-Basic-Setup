@@ -337,3 +337,90 @@ For synchronous function , express throws the error automatically
 For async function , we need to pass an next middleware
 
 flow : validators - > controller - > express error handler
+
+synchronous function error 
+app.get('/', (req, res) => {
+  throw new Error('BROKEN') // Express will catch this on its own.
+})
+
+
+async function error 
+
+app.get('/', (req, res, next) => {
+  fs.readFile('/file-does-not-exist', (err, data) => {
+    if (err) {
+      next(err) // Pass errors to Express.
+    } else {
+      res.send(data)
+    }
+  })
+})
+
+<!-- ====================== Section Separator ====================== -->
+Manual Error Handling
+
+import { NextFunction, Request, Response } from "express";
+import fs from "fs/promises";
+
+export const pingHandler = async (req: Request, res: Response, next: NextFunction) => {
+  
+  try{
+ await fs.readFile("sample")
+ res.status(200).json({message : "pong"});
+  } catch(error){
+  console.log("error in reading file",error);
+  res.status(500).json({message : "Internal server error"});
+  }
+};
+
+For lot of controller functions , we will be doing the error handling in the same way. So , we can make a middleware 
+to handle that error handling .
+
+<!-- ====================== Section Separator ====================== -->
+Generic error handling middleware
+
+-> src - > middlewares -> error.middleware.ts 
+
+make the custom generic error handling middleware 
+
+import { NextFunction, Request, Response } from "express";
+
+export const genericErrorHandler = (err : any , req:Request , res : Response , next : NextFunction) =>{
+    res.status(501).json({
+        success: false,
+        message: "something went wrong !!!"
+    })
+}
+
+//now in the server.ts
+
+// after all the routers , add the custom error handler
+app.use(genericErrorHandler);
+
+// our final pingcontroller.ts
+
+import { NextFunction, Request, Response } from "express";
+import fs from "fs/promises";
+
+export const pingHandler = async (req: Request, res: Response, next: NextFunction) => {
+  
+  try{
+ await fs.readFile("sample")
+ res.status(200).json({message : "pong"});
+  } catch(error){
+    // since express already calls the next function
+    next(error)
+  }
+};
+
+// we can also do this (since express automatically calls next)
+
+import { NextFunction, Request, Response } from "express";
+import fs from "fs/promises";
+
+export const pingHandler = async (req: Request, res: Response, next: NextFunction) => {
+  
+
+ await fs.readFile("sample")
+ res.status(200).json({message : "pong"})  
+};
