@@ -413,7 +413,7 @@ export const pingHandler = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-// we can also do this (since express automatically calls next)
+// we can also do this (since express automatically calls next) in express versions 5 or above
 
 import { NextFunction, Request, Response } from "express";
 import fs from "fs/promises";
@@ -424,3 +424,99 @@ export const pingHandler = async (req: Request, res: Response, next: NextFunctio
  await fs.readFile("sample")
  res.status(200).json({message : "pong"})  
 };
+
+<!-- ====================== Section Separator ====================== -->
+Different error messages for different responses
+
+src -> utils -> errors -> app.error.ts
+
+
+
+-> now in the app.error.ts file , complete the file 
+
+-> in the generic error handler (error middleware) , define the type of the error , statusCode and error message
+
+
+import { NextFunction, Request, Response } from "express";
+import { AppError } from "../utils/errors/app.error";
+
+export const genericErrorHandler = (err : AppError , req:Request , res : Response , next : NextFunction) =>{
+
+    console.log("error parameters is " , err);
+    
+    res.status(err.statusCode).json({
+        success: false,
+        message: err.message
+    })
+}
+
+
+-> and then in the ping controller , throw this error
+
+import { NextFunction, Request, Response } from "express";
+import fs from "fs/promises";
+import { AppError } from "../utils/errors/app.error";
+
+export const pingHandler = async (req: Request, res: Response, next: NextFunction) => {
+  
+  try{
+ await fs.readFile("sample")
+ res.status(200).json({message : "pong"});
+  } catch(error){
+     // now let us make object from the custom error
+     const customError : AppError = {
+        statusCode : 500 ,
+        message : "Internal Server Error",
+        name : 
+     }
+
+     throw customError ;
+  }
+};
+
+<!-- ====================== Section Separator ====================== -->
+We can make it even more cleaner
+
+-> class for the internalserver error 
+export interface AppError extends Error{
+     statusCode : number ,
+}
+
+export class InternalServerError implements AppError {
+    statusCode: number;
+    message: string;
+    name: string;
+
+    constructor(message : string){
+        this.statusCode = 500 ;
+        this.message = message;
+        this.name = "InternalServerError"
+    }
+}
+
+-> and send this error in the controller (ping.controller.ts)
+
+import { NextFunction, Request, Response } from "express";
+import fs from "fs/promises";
+import { InternalServerError } from "../utils/errors/app.error";
+
+export const pingHandler = async (req: Request, res: Response, next: NextFunction) => {
+  
+  try{
+ await fs.readFile("sample")
+ res.status(200).json({message : "pong"});
+  } catch(error){
+     
+    throw new InternalServerError("Something went wrong while reading the file");
+  }
+};
+
+
+Summary 
+-> in the server.ts we have app.use(genericErrorHandler)
+-> which is coming from the error.middleware.ts file
+-> this file has err of type AppError
+-> which is implemented in the app.error.ts file ( present in errors folder , which is present in utils)
+
+
+
