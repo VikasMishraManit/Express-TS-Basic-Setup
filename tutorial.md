@@ -322,3 +322,13 @@ const validateRequestBody = (schema: ZodObject<ZodRawShape>) => {
 };
 
 export default validateRequestBody;
+
+
+<!-- ====================== Section Separator ====================== -->
+   Adding Error Handling 
+<!-- ====================== Section Separator ====================== -->
+
+For synchronous function , express throws the error automatically
+For async function , we need to pass an next middleware
+
+flow : validators - > controller - > express error handler
