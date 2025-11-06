@@ -257,6 +257,11 @@ that this part of the url is varaible
 pingRouter.get('/:id/comments' , pingHandler)(where final request have been mentioned)
 That colon part is the varaible part
 
+<!-- ====================== Section Separator ====================== -->
+JSON's are not type-safe . So to improve this we are going to add the validation
+layer to it
+
+Start from 1:44
 
 <!-- ====================== Section Separator ====================== -->
 ZOD 
