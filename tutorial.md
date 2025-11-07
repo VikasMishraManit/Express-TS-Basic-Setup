@@ -593,3 +593,159 @@ Steps :
 
 This approach is going to be working in 80-90 percent cases . There will be some corner cases , but first let us 
 try out this approach
+
+config->logger.config.ts
+import winston from "winston";
+
+
+const logger = winston.createLogger({
+    format: winston.format.combine(
+        winston.format.timestamp({ format: "MM-DD-YYYY HH:mm:ss"  }), // how the timestamp should be formatted
+        winston.format.json(), // Format the log message as JSON
+        // define a custom print
+        winston.format.printf( ({  level, message, timestamp, ...data }) => {
+            const output = { 
+                level,
+                message, 
+                timestamp, 
+                data 
+            };
+            return JSON.stringify(output);
+        })
+    ),
+    transports: [
+        new winston.transports.Console(),
+    ]
+});
+
+export default logger;
+
+and add this correlation id in every log of the logger
+
+<!-- ====================== Section Separator ====================== -->
+Correlation Id in the background job (not in case of rest api)
+
+Let us say that some helper function form the utility folder (it will not have correlation id attached)
+
+Solution : AsyncStorage in NodeJS  
+
+utils ->helpers -> request.helpers.ts
+
+import {AsyncLocalStorage} from 'async_hooks';
+
+type AsyncLocalStorageType = {
+    correlationId : string;
+}
+
+const asyncLocalStorage = new AsyncLocalStorage<AsyncLocalStorageType>();
+
+export const getCorrelationId = () =>{
+    const asyncStore = asyncLocalStorage.getStore();
+    return asyncStore ?.correlationId || 'unknown error while creating correlation id'
+}
+
+
+and then in the correlation middleware
+
+
+import { NextFunction, Request, Response } from 'express';
+import { v4 as uuidV4 } from 'uuid';
+import { asyncLocalStorage } from '../utils/helpers/request.helper';
+
+export const attachCorrelationIdMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    // Generate a unique correlation ID
+    const correlationId = uuidV4();
+    
+    req.headers['x-correlation-id'] = correlationId;
+
+    // Call the next middleware or route handler
+    asyncLocalStorage.run({correlationId : correlationId},()=>{
+       next();
+    })
+   
+}
+
+and then in the logger config we attach it in the output json
+
+import winston from "winston";
+import { getCorrelationId } from "../utils/helpers/request.helper";
+
+
+const logger = winston.createLogger({
+    format: winston.format.combine(
+        winston.format.timestamp({ format: "MM-DD-YYYY HH:mm:ss"  }), // how the timestamp should be formatted
+        winston.format.json(), // Format the log message as JSON
+        // define a custom print
+        winston.format.printf( ({  level, message, timestamp, ...data }) => {
+            const output = { 
+                level,
+                message, 
+                timestamp, 
+                correlationId : getCorrelationId(),
+                data 
+            };
+            return JSON.stringify(output);
+        })
+    ),
+    transports: [
+        new winston.transports.Console(),
+    ]
+});
+
+export default logger;
+
+logger.something -> calls get correlationId -> which fetches the asyncStore -> and asyncStore for the current async context
+has the correlation id 
+
+
+<!-- ====================== Section Separator ====================== -->
+Storing the logs in a file
+
+in the logger.config.ts file 
+transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({filename : "logs/app.log"})
+    ]
+
+<!-- ====================== Section Separator ====================== -->
+
+    // log file seprately for every single day
+    Solution : winston daily rotate file
+
+in logger.config.ts file 
+
+
+    import winston from "winston";
+
+import DailyRotateFile from "winston-daily-rotate-file";
+import { getCorrelationId } from "../utils/helpers/request.helper";
+
+const logger = winston.createLogger({
+    format: winston.format.combine(
+        winston.format.timestamp({ format: "MM-DD-YYYY HH:mm:ss"  }), // how the timestamp should be formatted
+        winston.format.json(), // Format the log message as JSON
+        // define a custom print
+        winston.format.printf( ({  level, message, timestamp, ...data }) => {
+            const output = { 
+                level,
+                message, 
+                timestamp, 
+                correlationId: getCorrelationId(), 
+                data 
+            };
+            return JSON.stringify(output);
+        })
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new DailyRotateFile({
+            filename: "logs/%DATE%-app.log", // The file name pattern
+            datePattern: "YYYY-MM-DD", // The date format
+            maxSize: "20m", // The maximum size of the log file
+            maxFiles: "14d", // The maximum number of log files to keep
+        })
+        // TODO: add logic to integrate and save logs in mongo
+    ]
+});
+
+export default logger;

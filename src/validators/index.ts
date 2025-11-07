@@ -11,7 +11,7 @@ export const validateRequestBody = (schema: ZodObject<ZodRawShape>) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
 
-            logger.info("Validating request body");
+            logger.info("Validating request body" );
             await schema.parseAsync(req.body);
             logger.info("Request body is valid");
             next();
