@@ -477,7 +477,7 @@ export const pingHandler = async (req: Request, res: Response, next: NextFunctio
 <!-- ====================== Section Separator ====================== -->
 We can make it even more cleaner
 
--> class for the internalserver error 
+-> class for the internal server error 
 export interface AppError extends Error{
      statusCode : number ,
 }
@@ -520,3 +520,58 @@ Summary
 
 
 
+<!-- ====================== Section Separator ====================== -->
+Adding production grade loggers 
+<!-- ====================== Section Separator ====================== -->
+Use case : Let us say somebody made a payment on airbnb , the payment got deducted but they received errors . As a engineer , to 
+look into the problem , we have to know few things
+- when the request was made 
+- what procedures were done right 
+- what went wrong with it etc
+
+For all these logging is very necessary things (on  call engineers depend on this )
+
+Why console.log() will not work ? : Because that will be visible for only that session 
+
+There are many logging libraries for us to use like morgan , pino , winston etc 
+
+Logging Library we are going to use : Winston
+
+<!-- ====================== Section Separator ====================== -->
+Now , we have to prepare a logger object (we have to do some configuration for this object )
+
+src ->config ->logger.config.ts
+
+Properties of this logger object 
+
+-> Transport : it tells where should the logs go 
+-> Format : what should the log print (timestamp , messages etc)
+
+import winston from "winston";
+
+const logger = winston.createLogger({
+    // define the format
+      format: winston.format.combine(
+        winston.format.timestamp({format : "MM-DD-YYYY HH:mm:ss"}),
+        winston.format.json(),
+        // define the custom print
+        winston.format.printf(({level,message,timestamp,...data})=>{
+         const output = {level,message,timestamp,data};
+         return JSON.stringify(output);
+        })
+      ),
+
+      // define the transport 
+      transports : [
+        new winston.transports.Console(),
+      ]
+});
+
+export default logger;
+
+and in the server.ts file
+
+app.listen(serverConfig.PORT, () => {
+  console.log(`Server running on http://localhost:${serverConfig.PORT}`);
+  logger.info(`press ctrl +c to stop the server` , {"name" : "dev server});
+});
