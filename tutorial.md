@@ -575,3 +575,21 @@ app.listen(serverConfig.PORT, () => {
   console.log(`Server running on http://localhost:${serverConfig.PORT}`);
   logger.info(`press ctrl +c to stop the server` , {"name" : "dev server});
 });
+
+
+In the transport array , we can mention the place where we want to store our logger object
+
+<!-- ====================== Section Separator ====================== -->
+
+Problem Statement : user1 -> we store its log , user2 ->we store its logs then again user1 and so on
+How are we going to identify which users log are there in the logger
+
+Solution : Corelation Id (unique id for a particular request)
+
+Steps :
+
+-> Generate a unique id ( using UUID package)
+-> Before any request (in server.ts file) add a middleware for it
+
+This approach is going to be working in 80-90 percent cases . There will be some corner cases , but first let us 
+try out this approach
