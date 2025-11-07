@@ -77,20 +77,20 @@ to do so we will make a tsconfig.json file
 <!-- ====================== Section Separator ====================== -->
 Handling sensitive and configurable info (say port changes then application will reload) to handle this we will make a env file
 
-env varibales are stored in os level and any process can access these
+env variables are stored in os level and any process can access these
 ex: type env in terminal to see all these
 
-to manage these env varibales there is a nodejs package 
+to manage these env variables there is a nodejs package 
 
 1) npm i dotenv
 2) now create a .env file inside the project only
 
 <!-- ====================== Section Separator ====================== -->
 
-1) config layer : it willl contain all the configuration files 
+1) config layer : it will contain all the configuration files 
 
-dotenv.config(): it will load all the env variales from the .env file to the config file
-when server is running . When server stops then it doesnt get loaded 
+dotenv.config(): it will load all the env variables from the .env file to the config file
+when server is running . When server stops then it doesn't get loaded 
 
 to check this : in config folder -> index.ts make a function , inside that call
 dotenv.config() and then export that function to the main file (server.ts)
@@ -136,24 +136,24 @@ So now this changes to
 
 app.get('/ping', pingHandler); -> when we get ping request we pass it to the controller
 
-Note : we get ping request , it is being redirected to the pingHandler (cntroller)
+Note : we get ping request , it is being redirected to the pingHandler (controller)
 so this line is basically a routing line 
 
 
 <!-- ====================== Section Separator ====================== -->
 
 Routing : There is a mechanism called as express routing to define the routing layer.
-In this mechanism we donot define routes directly on the app object (this ensures that our
+In this mechanism we do not define routes directly on the app object (this ensures that our
 app object is not changed by the routing layer)
 
-Instead create a routerobject and then define the routes on that object (say pingRouter)
+Instead create a router object and then define the routes on that object (say pingRouter)
 
 // Below line registers all the routers and their corresponding routes
 // to the  app server object
 app.use(pingRouter);
 // we can add more routers
 
-Note : app.use(middlewarename) registers this middleware to all the requests
+Note : app.use(middleware name) registers this middleware to all the requests
 
 <!-- ====================== Section Separator ====================== -->
 
@@ -162,7 +162,7 @@ Middleware : are functions having access to req , res and next middleware functi
 pingRouter.get('/ping' ,middleware1,middleware2, pingHandler)
 
 
-Here pingHandler is the terminaing middleware
+Here pingHandler is the terminating middleware
 
 <!-- ====================== Section Separator ====================== -->
 
